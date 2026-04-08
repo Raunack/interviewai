@@ -119,38 +119,6 @@
             letter-spacing: -0.5px;
         }
 
-        #api-key-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #api-key-area input {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 6px 12px;
-            color: var(--text);
-            font-family: var(--mono);
-            font-size: 12px;
-            width: 220px;
-        }
-
-        #api-key-area input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        #key-status {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--border);
-        }
-
-        #key-status.valid {
-            background: var(--green);
-        }
 
         /* ── Layout ───────────────────────────────────────── */
         main {
@@ -791,12 +759,7 @@
     <!-- Header -->
     <header>
         <div class="logo" role="banner">InterviewAI</div>
-        <div id="api-key-area">
-            <label for="groq-key" style="font-size:13px;color:var(--muted)">Groq Key:</label>
-            <input type="password" id="groq-key" placeholder="gsk_..." aria-label="Groq API key" oninput="checkKey()"
-                autocomplete="off" />
-            <div id="key-status" title="API key status" aria-live="polite"></div>
-        </div>
+
     </header>
 
     <!-- Main layout -->
@@ -1227,7 +1190,6 @@
 
         // ── Groq API ───────────────────────────────────────────────
         async function submitAnswer() {
-            const key = document.getElementById('groq-key').value.trim();
             const answer = document.getElementById('answer-box').value.trim();
             const question = document.getElementById('question-text').textContent;
 
@@ -1237,53 +1199,19 @@
             document.getElementById('score-ring').style.display = 'none';
             document.getElementById('metrics-section').style.display = 'none';
 
-            if (!key) {
-                simulateFeedback(answer);
-                return;
-            }
-
             try {
-                const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                const res = await fetch('/api/feedback', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${key}`
-                    },
-                    body: JSON.stringify({
-                        model: 'llama-3.3-70b-versatile',
-                        messages: [{
-                            role: 'system',
-                            content: `You are an expert interview coach. Evaluate the candidate's answer and respond ONLY with a JSON object (no markdown) in this exact format:
-{"score":7,"accuracy":70,"clarity":80,"depth":65,"feedback":"Your specific feedback here in 2-3 sentences."}`
-                        }, {
-                            role: 'user',
-                            content: `Interview type: ${state.mode}\nQuestion: ${question}\nAnswer: ${answer}`
-                        }],
-                        temperature: 0.3,
-                        max_tokens: 300
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, answer, mode: state.mode })
                 });
-
-                const data = await res.json();
-                const text = data.choices[0].message.content;
-                const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+                const parsed = await res.json();
+                if (parsed.error) throw new Error(parsed.error);
                 renderFeedback(parsed, question);
             } catch (e) {
-                document.getElementById('ai-feedback-text').textContent = 'Error getting feedback. Check your API key or try again.';
+                document.getElementById('ai-feedback-text').textContent = 'Error getting feedback. Please try again.';
                 showToast('API error: ' + (e.message || 'Unknown'));
             }
-        }
-
-        function simulateFeedback(answer) {
-            const words = answer.split(' ').length;
-            const score = Math.min(10, Math.max(3, Math.round(words / 8 + Math.random() * 3)));
-            renderFeedback({
-                score,
-                accuracy: score * 9 + Math.round(Math.random() * 10),
-                clarity: score * 8 + Math.round(Math.random() * 15),
-                depth: score * 8 + Math.round(Math.random() * 12),
-                feedback: `Demo mode (no API key). Add your Groq key at the top for real AI feedback. Your answer had ${words} words — ${score >= 7 ? 'a solid length' : 'try to be more detailed'}.`
-            }, document.getElementById('question-text').textContent);
         }
 
         function renderFeedback(data, question) {
@@ -1345,65 +1273,35 @@
 
         // ── Hint ───────────────────────────────────────────────────
         async function getHint() {
-            const key = document.getElementById('groq-key').value.trim();
             const question = document.getElementById('question-text').textContent;
-            if (!key) { showToast('Add your Groq key for hints'); return; }
-
             document.getElementById('ai-feedback-text').innerHTML = '<span class="loading-dots">Getting hint</span>';
             try {
-                const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                const res = await fetch('/api/feedback', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
-                    body: JSON.stringify({
-                        model: 'llama-3.3-70b-versatile',
-                        messages: [{ role: 'user', content: `Give a 2-sentence hint for answering this interview question without giving the full answer: ${question}` }],
-                        max_tokens: 150
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, answer: 'Give me a hint only, not feedback.', mode: 'hint' })
                 });
                 const data = await res.json();
-                document.getElementById('ai-feedback-text').textContent = '💡 ' + data.choices[0].message.content;
+                document.getElementById('ai-feedback-text').textContent = '💡 ' + (data.feedback || 'Think about the key concepts related to this topic.');
             } catch (e) {
                 document.getElementById('ai-feedback-text').textContent = 'Could not get hint.';
             }
         }
 
         // ── Supabase ───────────────────────────────────────────────
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
         async function saveSession(score, question, answer, feedback, accuracy, clarity, depth) {
-            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
             try {
-                await fetch(`${SUPABASE_URL}/rest/v1/sessions`, {
+                await fetch('/api/save-session', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    },
-                    body: JSON.stringify({
-                        mode: state.mode,
-                        question,
-                        answer,
-                        score,
-                        accuracy,
-                        clarity,
-                        depth,
-                        feedback,
-                        created_at: new Date().toISOString()
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mode: state.mode, question, answer, score, accuracy, clarity, depth, feedback })
                 });
             } catch (e) {
                 console.warn('Session save failed:', e);
             }
         }
 
-        // ── API key check ──────────────────────────────────────────
-        function checkKey() {
-            const key = document.getElementById('groq-key').value.trim();
-            const dot = document.getElementById('key-status');
-            dot.className = key.startsWith('gsk_') && key.length > 20 ? 'valid' : '';
-        }
+
 
         // ── Accessibility ──────────────────────────────────────────
         function toggleCaption() {
