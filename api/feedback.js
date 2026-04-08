@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                     {
                         role: 'system',
                         content: `You are an expert interview coach. Evaluate the candidate's answer and respond ONLY with a JSON object (no markdown, no extra text) in this exact format:
-{"score":7,"accuracy":70,"clarity":80,"depth":65,"feedback":"Your specific, actionable feedback in 2-3 sentences."}`
+{"score":7,"accuracy":70,"clarity":80,"depth":65,"feedback":"Your specific, actionable feedback in 2-3 sentences.","idealAnswer":"A concise model answer in 3-4 sentences."}`
                     },
                     {
                         role: 'user',
