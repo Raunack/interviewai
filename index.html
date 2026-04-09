@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>InterviewAI — Mock Interview Practice</title>
+    <title>MockPrep — Interview Practice</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet" />
@@ -717,45 +717,240 @@
         }
 
         /* ── Question Progress Dots ──────────────────── */
-        .q-dots { display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
-        .q-dot { width:28px; height:28px; border-radius:50%; border:2px solid var(--border); background:transparent; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; color:var(--muted); transition:all 0.3s; }
-        .q-dot.answered { border-color:var(--green); background:rgba(34,211,160,0.15); color:var(--green); }
-        .q-dot.current  { border-color:var(--accent); background:rgba(79,142,247,0.15); color:var(--accent); }
+        .q-dots {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .q-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted);
+            transition: all 0.3s;
+        }
+
+        .q-dot.answered {
+            border-color: var(--green);
+            background: rgba(34, 211, 160, 0.15);
+            color: var(--green);
+        }
+
+        .q-dot.current {
+            border-color: var(--accent);
+            background: rgba(79, 142, 247, 0.15);
+            color: var(--accent);
+        }
 
         /* ── Ideal Answer ────────────────────────────── */
-        #ideal-answer-box { background:rgba(34,211,160,0.06); border:1px solid rgba(34,211,160,0.3); border-radius:10px; padding:14px; font-size:13px; line-height:1.6; color:var(--text); margin-top:10px; display:none; }
-        #ideal-answer-box .ideal-label { font-size:11px; font-weight:600; color:var(--green); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+        #ideal-answer-box {
+            background: rgba(34, 211, 160, 0.06);
+            border: 1px solid rgba(34, 211, 160, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text);
+            margin-top: 10px;
+            display: none;
+        }
+
+        #ideal-answer-box .ideal-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--green);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
 
         /* ── Filler word badge ───────────────────────── */
-        #filler-badge { display:none; background:rgba(247,185,85,0.12); border:1px solid var(--amber); border-radius:8px; padding:8px 12px; font-size:12px; color:var(--amber); margin-top:8px; }
+        #filler-badge {
+            display: none;
+            background: rgba(247, 185, 85, 0.12);
+            border: 1px solid var(--amber);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: var(--amber);
+            margin-top: 8px;
+        }
 
         /* ── Streak banner ───────────────────────────── */
-        #streak-banner { display:none; align-items:center; gap:8px; background:rgba(247,185,85,0.08); border:1px solid rgba(247,185,85,0.25); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--amber); margin-top:12px; }
+        #streak-banner {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(247, 185, 85, 0.08);
+            border: 1px solid rgba(247, 185, 85, 0.25);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--amber);
+            margin-top: 12px;
+        }
 
         /* ── Session Report Modal ────────────────────── */
-        #session-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:200; align-items:center; justify-content:center; }
-        #session-modal.open { display:flex; }
-        .modal-box { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:36px; max-width:520px; width:90%; max-height:85vh; overflow-y:auto; }
-        .modal-title { font-size:22px; font-weight:600; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; }
-        .modal-subtitle { font-size:13px; color:var(--muted); margin-bottom:24px; }
-        .report-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:24px; }
-        .report-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center; }
-        .report-num { font-size:28px; font-weight:700; color:var(--accent); }
-        .report-lbl { font-size:11px; color:var(--muted); margin-top:2px; }
-        .rb-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; }
-        .rb-score { font-weight:600; }
-        .verdict-badge { display:inline-block; padding:6px 18px; border-radius:20px; font-weight:600; font-size:14px; margin-bottom:20px; }
-        .verdict-select { background:rgba(34,211,160,0.15); color:var(--green); border:1px solid var(--green); }
-        .verdict-borderline { background:rgba(247,185,85,0.15); color:var(--amber); border:1px solid var(--amber); }
-        .verdict-reject { background:rgba(247,90,90,0.15); color:var(--red); border:1px solid var(--red); }
-        .modal-actions { display:flex; gap:10px; flex-wrap:wrap; }
+        #session-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #session-modal.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            max-width: 520px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .report-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .report-num {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .report-lbl {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .rb-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .rb-score {
+            font-weight: 600;
+        }
+
+        .verdict-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .verdict-select {
+            background: rgba(34, 211, 160, 0.15);
+            color: var(--green);
+            border: 1px solid var(--green);
+        }
+
+        .verdict-borderline {
+            background: rgba(247, 185, 85, 0.15);
+            color: var(--amber);
+            border: 1px solid var(--amber);
+        }
+
+        .verdict-reject {
+            background: rgba(247, 90, 90, 0.15);
+            color: var(--red);
+            border: 1px solid var(--red);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
         /* ── Indian Company Pack ─────────────────────── */
-        #company-pack-bar { display:none; gap:8px; padding:10px 24px; border-bottom:1px solid var(--border); flex-wrap:wrap; align-items:center; }
-        #company-pack-bar.visible { display:flex; }
-        .pack-btn { padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:12px; cursor:pointer; font-family:var(--font); transition:all 0.2s; }
-        .pack-btn:hover, .pack-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(79,142,247,0.08); }
-        .pack-label { font-size:12px; color:var(--muted); }
+        #company-pack-bar {
+            display: none;
+            gap: 8px;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        #company-pack-bar.visible {
+            display: flex;
+        }
+
+        .pack-btn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: var(--font);
+            transition: all 0.2s;
+        }
+
+        .pack-btn:hover,
+        .pack-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(79, 142, 247, 0.08);
+        }
+
+        .pack-label {
+            font-size: 12px;
+            color: var(--muted);
+        }
 
         /* ── Toast ───────────────────────────────────────── */
         #toast {
@@ -799,7 +994,7 @@
 
     <!-- Header -->
     <header>
-        <div class="logo" role="banner">InterviewAI</div>
+        <div class="logo" role="banner">MockPrep</div>
 
     </header>
 
@@ -976,7 +1171,7 @@
                         🗑️ Clear
                     </button>
                     <button class="ctrl-btn btn-primary" onclick="submitAnswer()" aria-label="Submit answer">
-                        ⚡ Get Feedback
+                        📊 Analyse Answer
                     </button>
                     <button class="ctrl-btn btn-next" onclick="nextQuestion()" aria-label="Next question">
                         Next →
@@ -986,8 +1181,8 @@
         </section>
 
         <!-- Feedback panel -->
-        <aside id="feedback-panel" aria-label="AI feedback panel">
-            <div class="panel-title">AI Feedback</div>
+        <aside id="feedback-panel" aria-label="feedback panel">
+            <div class="panel-title">Feedback</div>
 
             <div class="score-ring" id="score-ring" style="display:none">
                 <div class="score-circle" id="score-circle">
@@ -1023,7 +1218,7 @@
             </div>
 
             <div id="ai-feedback-text" aria-live="polite">
-                Submit an answer to get AI feedback from Groq Llama 3.3 70B.
+                Submit an answer to get expert feedback.
             </div>
 
             <div class="panel-title" style="margin-top:20px">History</div>
@@ -1054,7 +1249,9 @@
                 </div>
             </div>
             <div id="r-verdict-wrap" style="margin-bottom:16px"></div>
-            <div style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Question Breakdown</div>
+            <div
+                style="font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">
+                Question Breakdown</div>
             <div class="report-breakdown" id="r-breakdown"></div>
             <div id="r-weak" style="margin-top:16px;font-size:13px;color:var(--muted);display:none">
                 <span style="color:var(--amber);font-weight:600">⚠ Weak areas: </span><span id="r-weak-text"></span>
@@ -1156,7 +1353,7 @@
         };
 
         // ── Filler words ───────────────────────────────────────────
-        const FILLERS = ['um','uh','like','basically','literally','you know','i mean','sort of','kind of','right','okay so','so yeah','actually','obviously','honestly'];
+        const FILLERS = ['um', 'uh', 'like', 'basically', 'literally', 'you know', 'i mean', 'sort of', 'kind of', 'right', 'okay so', 'so yeah', 'actually', 'obviously', 'honestly'];
 
         // ── State ──────────────────────────────────────────────────
         let state = {
@@ -1336,7 +1533,7 @@
             state.sessionHistory.forEach((item, i) => {
                 const color = item.score >= 7 ? 'var(--green)' : item.score >= 5 ? 'var(--amber)' : 'var(--red)';
                 breakdown.innerHTML += `<div class="rb-row">
-                    <span style="max-width:320px;color:var(--muted)">${item.q.substring(0,55)}…</span>
+                    <span style="max-width:320px;color:var(--muted)">${item.q.substring(0, 55)}…</span>
                     <span class="rb-score" style="color:${color}">${item.score}/10</span>
                 </div>`;
             });
@@ -1345,7 +1542,7 @@
             const weakOnes = state.sessionHistory.filter(x => x.score < 6);
             if (weakOnes.length > 0) {
                 document.getElementById('r-weak').style.display = 'block';
-                document.getElementById('r-weak-text').textContent = weakOnes.map(x => x.q.substring(0,40)+'…').join(' · ');
+                document.getElementById('r-weak-text').textContent = weakOnes.map(x => x.q.substring(0, 40) + '…').join(' · ');
             } else {
                 document.getElementById('r-weak').style.display = 'none';
             }
@@ -1572,7 +1769,7 @@
         function clearFeedback() {
             document.getElementById('score-ring').style.display = 'none';
             document.getElementById('metrics-section').style.display = 'none';
-            document.getElementById('ai-feedback-text').textContent = 'Submit an answer to get AI feedback.';
+            document.getElementById('ai-feedback-text').textContent = 'Submit an answer to get expert feedback.';
             document.getElementById('ideal-answer-box').style.display = 'none';
             document.getElementById('filler-badge').style.display = 'none';
         }
