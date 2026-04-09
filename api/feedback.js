@@ -55,6 +55,6 @@ export default async function handler(req, res) {
         return res.status(200).json(parsed);
     } catch (err) {
         console.error('Groq API error:', err);
-        return res.status(500).json({ error: 'Failed to get AI feedback', detail: err.message });
+        return res.status(500).json({ error: 'Failed to get feedback', detail: err.message });
     }
 }
